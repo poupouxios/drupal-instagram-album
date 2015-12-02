@@ -1,0 +1,7 @@
+name = Instragram Book
+description = This module will generate a page that will pull from Instagram your photos and render them as a book.
+core = 7.x
+
+stylesheets[all][] = css/resume.css
+scripts[] = js/scripts.js
+

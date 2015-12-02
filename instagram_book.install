@@ -1,0 +1,35 @@
+<?php
+
+	function instagram_book_schema(){
+		$schema = array();
+		$schema['intragram_book'] = array(
+		  'description' => t('Instragram book module table'),
+		  'fields' => array(
+		    'id' => array(
+		      'description' => t('My unique identifier'),
+		      'type' => 'serial',
+		      'unsigned' => true,
+		      'not null' => true,
+		    ),
+		    'instagram_api_key' => array(
+		      'description' => t('Instagram API key field'),
+		      'type' => 'varchar',
+					'length' => 255,
+					'default' => ''
+		    ),
+		    'created_at' => array(
+		      'description' => t('Created at datetime'),
+			    'mysql_type' => 'datetime',
+		    ),
+		    'updated_at' => array(
+		      'description' => t('Updated at datetime'),
+			    'mysql_type' => 'datetime',
+		    )
+		  ),
+		  'primary key' => array('id'),
+		);
+
+		return $schema;  
+	}
+
+?>
