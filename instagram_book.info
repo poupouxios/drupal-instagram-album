@@ -5,3 +5,8 @@ core = 7.x
 stylesheets[all][] = css/resume.css
 scripts[] = js/scripts.js
 
+files[] = include/helper/InstagramBookApiHelper.php
+files[] = include/model/InstagramBookBaseModel.php
+files[] = include/model/InstagramBookModel.php
+files[] = include/mapper/InstagramBookBaseMapper.php
+files[] = include/mapper/InstagramBookMapper.php

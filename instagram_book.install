@@ -2,7 +2,7 @@
 
 	function instagram_book_schema(){
 		$schema = array();
-		$schema['intragram_book'] = array(
+		$schema['instagram_book'] = array(
 		  'description' => t('Instragram book module table'),
 		  'fields' => array(
 		    'id' => array(
@@ -11,8 +11,26 @@
 		      'unsigned' => true,
 		      'not null' => true,
 		    ),
-		    'instagram_api_key' => array(
-		      'description' => t('Instagram API key field'),
+		    'instagram_client_id' => array(
+		      'description' => t('Instagram Client Id field'),
+		      'type' => 'varchar',
+					'length' => 255,
+					'default' => ''
+		    ),
+		    'instagram_client_secret' => array(
+		      'description' => t('Instagram Client Secret field'),
+		      'type' => 'varchar',
+					'length' => 255,
+					'default' => ''
+		    ),
+		    'instagram_code' => array(
+		      'description' => t('Instagram Code field'),
+		      'type' => 'varchar',
+					'length' => 255,
+					'default' => ''
+		    ),
+		    'instagram_access_token' => array(
+		      'description' => t('Instagram Access Token field'),
 		      'type' => 'varchar',
 					'length' => 255,
 					'default' => ''

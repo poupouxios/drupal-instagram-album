@@ -1,62 +1,64 @@
 <?php
 
-	function resume_main_fields_form($form, &$form_state) {
-		global $base_url;
+module_load_include('inc', 'instagram_book', 'include/forms/instagram_login.form');
 
-		$form['instagram_api_key'] = array(
-			 '#title' => t('Instagram API key'),
-       '#type' => 'textfield',
-       '#required' => FALSE,
-			 '#default_value' => ""
-    );
+	function instagram_book_fields_form($form, &$form_state) {
+		$form['#tree'] = TRUE;
 
-		$form['submit_button'] = array(
-		  '#type' => 'submit',
-		  '#value' => t('Save'),
+		$dataModels = InstagramBookModel::getMapper()->findAll();		
+		$instagramBookModel = null;
+		if(count($dataModels) > 0){
+			$instagramBookModel = $dataModels[0];
+		}
+
+		$form = array_merge($form,instagram_login_form($form, $form_state,$instagramBookModel));
+
+		if(isset($_GET['code']) || (isset($instagramBookModel) && strlen($instagramBookModel->instagram_client_secret) > 1)){			
+			$form['instagram_client_secret'] = array(
+				 '#title' => t('Instagram Client Secret'),
+		     '#type' => 'textfield',
+		     '#required' => TRUE,
+				 '#default_value' => isset($instagramBookModel->instagram_client_secret) ? $instagramBookModel->instagram_client_secret : ""
+		  );
+
+			$form['submit_button'] = array(
+				'#type' => 'submit',
+				'#value' => t('Authenticate & Save'),
+			);
+		}
+
+		$form['instagram_access_token'] = array(
+			'#type' => "hidden",
+			'#value' => isset($instagramBookModel->instagram_access_token) ? $instagramBookModel->instagram_access_token : ""
 		);
 		
 		return $form;
 	}
 
-	function resume_main_fields_form_submit($form, &$form_state) {
+	function instagram_book_fields_form_submit($form, &$form_state) {
+		$instagram_client_secret =  $form_state['values']['instagram_client_secret'];
+		$dataModels = InstagramBookModel::getMapper()->findAll();		
 
-		$instragram_api_key = $form_state['values']['instagram_api_key'];
-
-
-		if(count($dataModels) == 0){
-			$resumeMain = ResumeMainModel::createObject($form_state['values']);
-			$resumeMain->image_id = isset($file) ? $file->fid : null;
-			$resumeMainId = $resumeMain::getMapper()->setModel($resumeMain)->save();
-			resume_set_subforms($form_state,$resumeMainId);
-	    drupal_set_message("Your profile has been created. Visit the resume front page to view your changes."); 
-		}else{
-			$resumeMain = $dataModels[0];
-			$resumeMain->updateFields($form_state['values']);
-			$resumeMain->image_id = isset($file) ? $file->fid : null;
-			$resumeMain::getMapper()->setModel($resumeMain)->save();
-			resume_set_subforms($form_state,$resumeMain->id);
-	    drupal_set_message("Your profile has been updated. Visit the resume front page to view your changes."); 
-		}
-
-    return $form;
-
-	}
-
-	function resume_set_subforms($form_state,$resumeMainId){
-		foreach($form_state['values'] as $key => $dataSet){
-			if(ResumeSubformHelper::doesFormExist($key)){
-				$variantModelName = ResumeSubformHelper::getSubFormVariantModel($key);
-				ResumeSubformModel::getMapper()->deleteAllBasedOn($resumeMainId,$variantModelName);
-				$position = 0;
-				foreach($dataSet as $data){
-					if(is_array($data)){
-						$formModel = $variantModelName::createObject($data);
-						ResumeSubformModel::getMapper()->setSubformVariantModel($formModel)->saveSubformVariantData($resumeMainId,$position);
-						$position++;
+		if(count($dataModels) > 0){
+			$instagramBookModel = $dataModels[0];
+			$instagramBookModel->updateFields($form_state['values']);
+			$instagramBookModel->updateFields($form_state['values']['instagram_login']);
+			if(isset($_GET['code']) || strlen($instagramBookModel->instagram_access_token) == 0){
+				$instagramResponse = InstagramBookApiHelper::authenticateInstagramCredentials($instagramBookModel,$_GET['code']);
+				if($instagramResponse){
+					if(isset($instagramResponse->access_token)){
+						$instagramBookModel->instagram_access_token = $instagramResponse->access_token;
+						InstagramBookModel::getMapper()->setModel($instagramBookModel)->save();
+						drupal_set_message("Your Instagram credentials are valid and are being saved successfully."); 
+					}else{
+						drupal_set_message("Failed to save: ".$instagramResponse->error_message,"error"); 						
 					}
 				}
 			}
 		}
+
+    return $form;
+
 	}
 
 ?>

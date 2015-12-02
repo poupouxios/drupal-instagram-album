@@ -1,53 +1,71 @@
 <?php
 
-	function resume_permission() {
+	define("ADMIN_URL","admin/structure/instagram-book");
+
+	function instagram_book_permission() {
 
 		return array(
-		  'administer_resume' => array(
-		    'title'       => t('Administer Resume'),
-		    'description' => t('Only the owner of the site must edit the resume.'),
+		  'administer_instagram_book' => array(
+		    'title'       => t('Administer Instagram Book'),
+		    'description' => t('Only the owner of the site must edit the Instagram Book.'),
 		  ),
 		);
 	}
 	
-	function resume_menu() {
+	function instagram_book_menu() {
 		$items = array();
 
-		$items['admin/structure/resume']           = array(
-		  'title' => 'Resume', //page title
-		  'description' => 'Setup Curriculum Vitae for the owner of the site',
+		$items[ADMIN_URL]  = array(
+		  'title' => 'Instagram Book', //page title
+		  'description' => 'Setup your Instagram Account to get the access to your instragram pictures',
 		  'page callback' => 'drupal_get_form', //this is the function that will be called when the page is accessed.  for a form, use drupal_get_form
-		  'page arguments' => array('resume_main_fields_form'), //put the name of the form here
-		  'access arguments' => array('administer_resume'),
+		  'page arguments' => array('instagram_book_fields_form'), //put the name of the form here
+		  'access arguments' => array('administer_instagram_book'),
 		  'type'             => MENU_NORMAL_ITEM,
-		  'file'             => 'resume.admin.inc',
-		);
-
-	 $items['resume'] = array(
-			'title'           => 'Resume',
-			'description'     => t('Resume'),
-			'menu_name'       => 'main-menu',
-			'weight'          => 8,
-			'access callback' => TRUE,
-			'page callback'   => 'resume_render',
-			'access arguments' => array('access content'),
-			'type' => MENU_NORMAL_ITEM,
+		  'file'             => 'instagram_book.admin.inc',
 		);
 
 		return $items;
 	}
 
-	function resume_theme() {
-		  return array(
-		      'resume_template' => array(
-		          'render element' => 'elements',
-		          'template' => 'template/resume',
-		      ),
-		  );
+	function instagram_book_block_info() {
+		$blocks['instagram_book_block'] = array(
+		  'info' => t('Instagram Book'), 
+		  'cache' => DRUPAL_NO_CACHE, //there are a number of caching options for this
+		);
+
+		return $blocks;
 	}
 
-	function resume_render(){
-		return theme('resume_template');
+	function instagram_book_block_view($delta = ''){
+		switch($delta){
+		  case 'instagram_book_block':
+		    if(user_access('access content')){ //good idea to check user perms here
+		       $block['content'] = instagram_book_setup_items();
+		       return $block;
+		    }
+		    break;
+		}
 	}
 
+	function instagram_book_setup_items(){
+		$items = array();
+		$dataModels = InstagramBookModel::getMapper()->findAll();
+		$instagramModel = null;
+		if(count($dataModels) > 0){
+			$instagramModel = $dataModels[0];
+		}
+		return theme('instagram_book_setup_items', array('instagramModel' => $instagramModel)); 
+	}
+
+	function instagram_book_theme() {   
+		 return array(
+		  'instagram_book_setup_items' => array(
+		    'variables' => array(
+		      'instagramModel' => NULL
+		     ),
+		    'template' => 'template/instagram_book--block',
+		  ),
+		);
+	}
 ?>
