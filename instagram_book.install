@@ -11,6 +11,12 @@
 		      'unsigned' => true,
 		      'not null' => true,
 		    ),
+		    'instagram_user_id' => array(
+		      'description' => t('Instagram User Id field'),
+		      'type' => 'varchar',
+					'length' => 255,
+					'default' => ''
+		    ),
 		    'instagram_client_id' => array(
 		      'description' => t('Instagram Client Id field'),
 		      'type' => 'varchar',
@@ -35,6 +41,11 @@
 					'length' => 255,
 					'default' => ''
 		    ),
+		    'no_of_images' => array(
+		      'description' => t('No Of Images field'),
+		      'type' => 'int',
+					'default' => 0
+		    ),				
 		    'created_at' => array(
 		      'description' => t('Created at datetime'),
 			    'mysql_type' => 'datetime',

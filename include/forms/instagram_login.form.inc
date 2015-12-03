@@ -1,14 +1,10 @@
 <?php
 	function instagram_login_form($form, &$form_state,$instagramBookModel){
 
-		$form['instagram_login']['description'] = array(
-			'#type' => "item",
-			'#description' => t("If you update your Client ID, <strong>always</strong> authorize it before pressing save.")
-		);
-
 		$form['instagram_login']['instagram_client_id'] = array(
 		  '#type' => 'textfield',
 		  '#title' => t('Instagram Client Id'),
+			'#description' => t("If you update your Client ID, <strong>always</strong> authorize it before pressing save."),
 		  '#size' => 40,
 		  '#maxlength' => 255,
 		  '#required' => TRUE,
@@ -18,6 +14,7 @@
 		$form['instagram_login']['verify_client_id'] = array(
 			'#type' => 'submit',
 			'#value' => t('Authorize Client ID'),
+			'#limit_validation_errors' => array(array('instagram_login')),
 			'#submit' => array('instagram_book_verify_client_id'),
 		);
 

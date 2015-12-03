@@ -1,0 +1,158 @@
+.loading_primary {
+    background-color: rgba(0,0,0,0);
+    border: 5px solid rgba(131,151,75,1);
+    opacity: .9;
+    border-right: 5px solid rgba(0,0,0,0);
+    border-left: 5px solid rgba(0,0,0,0);
+    border-radius: 50px;
+    box-shadow: 0 0 35px #83974B;
+    width: 50px;
+		background-color:#e1e1e1;
+    height: 50px;
+    margin: 0 auto;
+    -moz-animation: spinPulse 1s infinite ease-in-out;
+    -webkit-animation: spinPulse 1s infinite linear;
+}
+
+.loading_secondary {
+    background-color: rgba(0,0,0,0);
+    border: 5px solid rgba(131,151,75,1);
+    opacity: .9;
+    border-left: 5px solid rgba(0,0,0,0);
+    border-right: 5px solid rgba(0,0,0,0);
+    border-radius: 50px;
+    box-shadow: 0 0 15px #83974B;
+    width: 30px;
+    height: 30px;
+    margin: 0 auto;
+    position: relative;
+    top: -40px;
+    -moz-animation: spinoffPulse 1s infinite linear;
+    -webkit-animation: spinoffPulse 1s infinite linear;
+}
+
+@-moz-keyframes spinPulse {
+    0% {
+        -moz-transform: rotate(160deg);
+        opacity: 0;
+        box-shadow: 0 0 1px #2187e7;
+    }
+
+    50% {
+        -moz-transform: rotate(145deg);
+        opacity: 1;
+    }
+
+    100% {
+        -moz-transform: rotate(-320deg);
+        opacity: 0;
+    };
+}
+
+@-moz-keyframes spinoffPulse {
+    0% {
+        -moz-transform: rotate(0deg);
+    }
+
+    100% {
+        -moz-transform: rotate(360deg);
+    };
+}
+
+@-webkit-keyframes spinPulse {
+    0% {
+        -webkit-transform: rotate(160deg);
+        opacity: 0;
+        box-shadow: 0 0 1px #83974B;
+    }
+
+    50% {
+        -webkit-transform: rotate(145deg);
+        opacity: 1;
+    }
+
+    100% {
+        -webkit-transform: rotate(-320deg);
+        opacity: 0;
+    };
+}
+
+@-webkit-keyframes spinoffPulse {
+    0% {
+        -webkit-transform: rotate(0deg);
+    }
+
+    100% {
+        -webkit-transform: rotate(360deg);
+    };
+}
+
+#album{
+	margin:20px auto 0px auto;
+	position:relative;
+	left:0;
+
+	-moz-transition:0.3s left;
+	-webkit-transition:0.3s left;
+	transition:0.3s left;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+}
+
+#album .page{
+	overflow:hidden;
+	-webkit-box-shadow: 10px 5px 10px 5px rgba(0,0 , 0, 0.3);
+	box-shadow: 10px 5px 10px 5px rgba(0,0 , 0, 0.3);
+	background-color: #e1e1e1;
+}
+
+#album .leftPage div{
+	border-right:1px solid #bbb;
+}
+
+#album.fullPage{
+	-webkit-box-shadow: 0px 0px 29px 7px rgba(0,0 , 0, 0.3);
+	box-shadow: 0px 0px 29px 7px rgba(0,0 , 0, 0.3);
+	margin-left:-24px;
+}
+
+/* Center the magazine when the last page is shown */
+#album.centerEnd{
+	left:260px;
+}
+
+#album .page img{
+	display:block;
+	padding:10px;
+	-webkit-box-shadow: inset -2px 0px 8px 0px rgba(0, 0, 0, 0.3);
+	box-shadow: inset -2px 0px 8px 0px rgba(0, 0, 0, 0.3);
+}
+
+#album span.pageNum{
+    background-color: rgba(0, 0, 0, 0.3);
+    bottom: 25px;
+    box-shadow: 0 0 3px rgba(0, 0, 0, 0.25);
+    color: #FFFFFF;
+    font-size: 11px;
+    height: 24px;
+    line-height: 22px;
+    opacity: 0.9;
+    position: absolute;
+    text-align: center;
+    width: 55px;
+}
+
+#album span.pageNum.left{
+	left:0;
+	right:auto;
+}
+
+#album span.pageNum.right{
+	left:auto;
+	right:0;
+}
+
+/* Hide the page number on the cover */
+#page1 .pageNum{
+	display:none;
+}
