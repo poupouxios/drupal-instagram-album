@@ -1,4 +1,4 @@
-name = Instragram Book
+name = Instagram Book
 description = This module will generate a page that will pull from Instagram your photos and render them as a book.
 core = 7.x
 
