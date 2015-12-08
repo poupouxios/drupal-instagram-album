@@ -100,7 +100,7 @@ module_load_include('inc', 'instagram_book', 'include/forms/instagram_login.form
 	}
 
 	function instagram_book_remove_cache_file($form, &$form_state){
-		$cache_file = drupal_get_path('module', 'instagram_book')."/cache/".CACHE_FILENAME;
+		$cache_file = drupal_get_path('module', 'instagram_book')."/template/".CACHE_FILENAME;
 		if(file_exists($cache_file)){
 			unlink($cache_file);
 			drupal_set_message("Cache file has being deleted."); 			
