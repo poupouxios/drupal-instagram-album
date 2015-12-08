@@ -102,6 +102,9 @@ module_load_include('inc', 'instagram_book', 'include/forms/instagram_login.form
 						drupal_set_message("Failed to save: ".$instagramResponse->error_message,"error"); 						
 					}
 				}
+			}else if (strlen($instagramBookModel->instagram_access_token) > 1){
+				InstagramBookModel::getMapper()->setModel($instagramBookModel)->save();
+				drupal_set_message("Successfully updated");
 			}
 		}
 
@@ -115,7 +118,7 @@ module_load_include('inc', 'instagram_book', 'include/forms/instagram_login.form
 			cache_clear_all(INSTAGRAM_BOOK_CACHE_NAME,INSTAGRAM_BOOK_CACHE_TYPE);	
 			drupal_set_message("Cache has being cleared."); 			
 		}else{
-			drupal_set_message("The cache is not being set."); 			
+			drupal_set_message("The cache is not set.","warning"); 			
 		}
 	}
 

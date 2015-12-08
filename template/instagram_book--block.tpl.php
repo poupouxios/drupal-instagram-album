@@ -3,10 +3,13 @@
 	$instagramApiUrl = "https://api.instagram.com/v1/users/".$instagramModel->instagram_user_id."/media/recent/?min_id=0&access_token=".$instagramModel->instagram_access_token;
 	$cachedData = cache_get(INSTAGRAM_BOOK_CACHE_NAME,INSTAGRAM_BOOK_CACHE_TYPE);
 
-	if($cachedData){
+	if($cachedData && ($cachedData->expire > strtotime("now"))){
 		$images = unserialize($cachedData->data);
 	}
 	else{
+		if($cachedData && ($cachedData->expire <= strtotime("now"))){
+			cache_clear_all(INSTAGRAM_BOOK_CACHE_NAME,INSTAGRAM_BOOK_CACHE_TYPE);
+		}
 		$moreInstagramPhotos = true;
 		$images = array();
 		$count=0;
@@ -39,7 +42,7 @@
 		// Push the cover in the beginning of the array
 		array_unshift($images,array("title"=>"Cover", "src"=>$module_path."/images/cover.jpg"));
 	
-		cache_set(INSTAGRAM_BOOK_CACHE_NAME,serialize($images),INSTAGRAM_BOOK_CACHE_TYPE,$instagramModel->cache_lifetime);
+		cache_set(INSTAGRAM_BOOK_CACHE_NAME,serialize($images),INSTAGRAM_BOOK_CACHE_TYPE,strtotime("+".$instagramModel->cache_lifetime." seconds"));
 	}
 	$totalPages = count($images);	
 ?>
