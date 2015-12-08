@@ -1,10 +1,10 @@
 <?php
 	$module_path =  drupal_get_path('module', 'instagram_book');
 	$instagramApiUrl = "https://api.instagram.com/v1/users/".$instagramModel->instagram_user_id."/media/recent/?min_id=0&access_token=".$instagramModel->instagram_access_token;
-	$cache_file = $module_path."/template/".CACHE_FILENAME;
+	$cachedData = cache_get(INSTAGRAM_BOOK_CACHE_NAME,INSTAGRAM_BOOK_CACHE_TYPE);
 
-	if(file_exists($cache_file) && filemtime($cache_file) > time() - 60*60){
-		$images = unserialize(file_get_contents($cache_file));
+	if($cachedData){
+		$images = unserialize($cachedData->data);
 	}
 	else{
 		$moreInstagramPhotos = true;
@@ -39,8 +39,7 @@
 		// Push the cover in the beginning of the array
 		array_unshift($images,array("title"=>"Cover", "src"=>$module_path."/images/cover.jpg"));
 	
-		// Update the cache file
-		file_put_contents($cache_file,serialize($images));
+		cache_set(INSTAGRAM_BOOK_CACHE_NAME,serialize($images),INSTAGRAM_BOOK_CACHE_TYPE,$instagramModel->cache_lifetime);
 	}
 	$totalPages = count($images);	
 ?>

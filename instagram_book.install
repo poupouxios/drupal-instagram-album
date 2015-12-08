@@ -45,6 +45,11 @@
 		      'description' => t('No Of Images field'),
 		      'type' => 'int',
 					'default' => 0
+		    ),
+		    'cache_lifetime' => array(
+		      'description' => t('Cache file until its being regenerated field'),
+		      'type' => 'int',
+					'default' => 0
 		    ),				
 		    'created_at' => array(
 		      'description' => t('Created at datetime'),

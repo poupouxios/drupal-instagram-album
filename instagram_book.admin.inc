@@ -32,14 +32,24 @@ module_load_include('inc', 'instagram_book', 'include/forms/instagram_login.form
 				 '#description' => t("If you update this value, remember to clear the custom cache file to get the correct number of images."),
 		     '#required' => TRUE,
 				 '#size' => 4,
-				 '#element_validate' => array('instagram_book_no_of_images_value_validate'),
+				 '#element_validate' => array('instagram_book_integer_validate'),
 				 '#default_value' => isset($instagramBookModel->no_of_images) ? $instagramBookModel->no_of_images : 20
+		  );
+
+			$form['cache_lifetime'] = array(
+		     '#type' => 'textfield',
+				 '#title' => t('Cache lifetime'),
+				 '#description' => t("Set the lifetime that Drupal will keep in cache the Instagram API Results for faster loading. The value is in seconds."),
+		     '#required' => TRUE,
+				 '#size' => 4,
+				 '#element_validate' => array('instagram_book_integer_validate'),
+				 '#default_value' => isset($instagramBookModel->cache_lifetime) ? $instagramBookModel->cache_lifetime : 360
 		  );
 
 			$form['clear_cache_file'] = array(
 				'#type' => 'submit',
-				'#value' => t('Clear the custom cache file'),
-				'#submit' => array('instagram_book_remove_cache_file'),
+				'#value' => t('Clear Instagram cache'),
+				'#submit' => array('instagram_book_clear_cache'),
 			);
 
 			$form['submit_button'] = array(
@@ -63,7 +73,7 @@ module_load_include('inc', 'instagram_book', 'include/forms/instagram_login.form
 		return $form;
 	}
 
-	function instagram_book_no_of_images_value_validate($element, $form_state){
+	function instagram_book_integer_validate($element, $form_state){
 		if(strlen($element['#value']) == 0){
 			return;
 		}
@@ -99,13 +109,13 @@ module_load_include('inc', 'instagram_book', 'include/forms/instagram_login.form
 
 	}
 
-	function instagram_book_remove_cache_file($form, &$form_state){
-		$cache_file = drupal_get_path('module', 'instagram_book')."/template/".CACHE_FILENAME;
-		if(file_exists($cache_file)){
-			unlink($cache_file);
-			drupal_set_message("Cache file has being deleted."); 			
+	function instagram_book_clear_cache($form, &$form_state){
+		$cachedData = cache_get(INSTAGRAM_BOOK_CACHE_NAME,INSTAGRAM_BOOK_CACHE_TYPE);
+		if($cachedData){
+			cache_clear_all(INSTAGRAM_BOOK_CACHE_NAME,INSTAGRAM_BOOK_CACHE_TYPE);	
+			drupal_set_message("Cache has being cleared."); 			
 		}else{
-			drupal_set_message("The cache file doesn't exist."); 			
+			drupal_set_message("The cache is not being set."); 			
 		}
 	}
 

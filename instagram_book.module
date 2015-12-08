@@ -1,7 +1,8 @@
 <?php
 
 	define("ADMIN_URL","admin/structure/instagram-book");
-	define("CACHE_FILENAME","instagram_cache.txt");
+	define("INSTAGRAM_BOOK_CACHE_NAME","instagram_cache_data");
+	define("INSTAGRAM_BOOK_CACHE_TYPE","cache_block");
 
 	function instagram_book_permission() {
 
