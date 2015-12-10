@@ -18,6 +18,14 @@ module_load_include('inc', 'instagram_book', 'include/forms/instagram_login.form
 
 		$form = array_merge($form,instagram_login_form($form, $form_state,$instagramBookModel));
 
+		$form['instagram_album_cover_image'] = array(
+			'#title' => t('Album Cover Image'),
+			'#type' => 'managed_file',
+			'#description' => t('Upload a 520x520 cover image.'),
+			'#upload_location' => 'public://',
+			'#default_value' => isset($instagramBookModel->image_id) ? $instagramBookModel->image_id : null
+		);
+
 		if(isset($_GET['code']) || (isset($instagramBookModel) && strlen($instagramBookModel->instagram_client_secret) > 1)){			
 			$form['instagram_client_secret'] = array(
 				 '#title' => t('Instagram Client Secret'),
@@ -83,12 +91,17 @@ module_load_include('inc', 'instagram_book', 'include/forms/instagram_login.form
 	}
 
 	function instagram_book_fields_form_submit($form, &$form_state) {
+
+		$file = InstagramBookImageHelper::handleImageFile($form['instagram_album_cover_image']['#default_value'],
+$form_state['values']['instagram_album_cover_image'],"instagram_book","instagram_album_cover_image");
+
 		$instagram_client_secret =  $form_state['values']['instagram_client_secret'];
 		$dataModels = InstagramBookModel::getMapper()->findAll();		
 
 		if(count($dataModels) > 0){
 			$instagramBookModel = $dataModels[0];
 			$instagramBookModel->updateFields($form_state['values']);
+			$instagramBookModel->image_id = isset($file) ? $file->fid : null;
 			$instagramBookModel->updateFields($form_state['values']['instagram_login']);
 			if(isset($_GET['code']) || strlen($instagramBookModel->instagram_access_token) == 0){
 				$instagramResponse = InstagramBookApiHelper::authenticateInstagramCredentials($instagramBookModel,$_GET['code']);
@@ -97,6 +110,7 @@ module_load_include('inc', 'instagram_book', 'include/forms/instagram_login.form
 						$instagramBookModel->instagram_access_token = $instagramResponse->access_token;
 						$instagramBookModel->instagram_user_id = $instagramResponse->user->id;
 						InstagramBookModel::getMapper()->setModel($instagramBookModel)->save();
+						cache_clear_all(INSTAGRAM_BOOK_CACHE_NAME,INSTAGRAM_BOOK_CACHE_TYPE);	
 						drupal_set_message("Your Instagram credentials are valid and are being saved successfully."); 
 					}else{
 						drupal_set_message("Failed to save: ".$instagramResponse->error_message,"error"); 						
@@ -104,6 +118,7 @@ module_load_include('inc', 'instagram_book', 'include/forms/instagram_login.form
 				}
 			}else if (strlen($instagramBookModel->instagram_access_token) > 1){
 				InstagramBookModel::getMapper()->setModel($instagramBookModel)->save();
+				cache_clear_all(INSTAGRAM_BOOK_CACHE_NAME,INSTAGRAM_BOOK_CACHE_TYPE);	
 				drupal_set_message("Successfully updated");
 			}
 		}

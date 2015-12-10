@@ -9,6 +9,7 @@
 			"instagram_access_token" => "",
 			"instagram_user_id" => "",
 			"cache_lifetime" => 0,
+			"image_id" => null,
 			"no_of_images" => 0,
 			"created_at" => "NOW()",
 			"updated_at" => "NOW()"

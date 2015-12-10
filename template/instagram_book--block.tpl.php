@@ -39,9 +39,12 @@
 		// 32 items when when the cover is added
 		array_pop($images);
 	
-		// Push the cover in the beginning of the array
-		array_unshift($images,array("title"=>"Cover", "src"=>$module_path."/images/cover.jpg"));
-	
+		if($instagramModel->image_id){
+			$image = file_load($instagramModel->image_id);
+			if($image){
+				array_unshift($images,array("title"=>"Valentinos Papasavvas Instagram Album Cover", "src"=>file_create_url($image->uri)));
+			}
+		}	
 		cache_set(INSTAGRAM_BOOK_CACHE_NAME,serialize($images),INSTAGRAM_BOOK_CACHE_TYPE,strtotime("+".$instagramModel->cache_lifetime." seconds"));
 	}
 	$totalPages = count($images);	

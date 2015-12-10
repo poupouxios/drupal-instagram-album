@@ -5,6 +5,7 @@ core = 7.x
 stylesheets[all][] = css/instagram_book.css
 
 files[] = include/helper/InstagramBookApiHelper.php
+files[] = include/helper/InstagramBookImageHelper.php
 files[] = include/model/InstagramBookBaseModel.php
 files[] = include/model/InstagramBookModel.php
 files[] = include/mapper/InstagramBookBaseMapper.php

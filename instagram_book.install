@@ -41,6 +41,11 @@
 					'length' => 255,
 					'default' => ''
 		    ),
+		    'image_id' => array(
+		      'description' => t('Instagram Album Cover Image id'),
+		      'type' => 'int',
+		      'unsigned' => true,
+		    ),
 		    'no_of_images' => array(
 		      'description' => t('No Of Images field'),
 		      'type' => 'int',
